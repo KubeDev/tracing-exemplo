@@ -1,0 +1,68 @@
+version: '3'
+services: 
+
+  gerador-pessoa:
+    image: fabricioveronez/gerador-pessoa
+    build:
+      dockerfile: Dockerfile
+      context: gerador-pessoa/
+    depends_on: 
+     - jaeger
+     - gerador-nome
+     - gerador-documento
+    ports:
+      - 5000:5000  
+
+  gerador-nome:
+    image: fabricioveronez/gerador-nome
+    build:
+      dockerfile: Dockerfile
+      context: gerador-nome/
+    depends_on: 
+     - jaeger  
+    ports:
+      - 5001:5000
+      
+  gerador-documento:
+    image: fabricioveronez/gerador-documento
+    build:
+      dockerfile: Dockerfile
+      context: gerador-documento/
+    depends_on: 
+     - jaeger
+     - gerador-cpf
+     - gerador-rg      
+    ports:
+      - 5002:5000   
+      
+  gerador-cpf:
+    image: fabricioveronez/gerador-cpf
+    build:
+      dockerfile: Dockerfile
+      context: gerador-cpf/
+    depends_on: 
+     - jaeger    
+    ports:
+      - 5003:5000  
+      
+  gerador-rg:
+    image: fabricioveronez/gerador-rg
+    build:
+      dockerfile: Dockerfile
+      context: gerador-rg/
+    depends_on: 
+     - jaeger      
+    ports:
+      - 5004:5000        
+
+  jaeger: 
+    container_name: jeager_tracing
+    image: jaegertracing/all-in-one
+    ports: 
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "9411:9411"
