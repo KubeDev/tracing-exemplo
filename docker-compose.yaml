@@ -10,11 +10,17 @@ services:
     image: fabricioveronez/gerador-pessoa
     build:
       dockerfile: Dockerfile
-      context: gerador-pessoa/
+      context: src/gerador-pessoa/
     depends_on: 
      - jaeger
      - gerador-nome
      - gerador-documento
+    environment:
+      URL_GERADOR_NOME: "gerador-nome:5000"
+      URL_GERADOR_DOCUMENTO: "gerador-documento:5000" 
+      JAEGER_HOST: "jaeger"
+      JAEGER_PORT: "JAEGER_PORT"
+      JAEGER_SERVICE_NAME: "gerador-pessoa"          
     networks:
       - tracing
     ports:
@@ -24,7 +30,11 @@ services:
     image: fabricioveronez/gerador-nome
     build:
       dockerfile: Dockerfile
-      context: gerador-nome/
+      context: src/gerador-nome/
+    environment:
+      JAEGER_HOST: "jaeger"
+      JAEGER_PORT: "JAEGER_PORT"
+      JAEGER_SERVICE_NAME: "gerador-nome"       
     networks:
       - tracing      
     depends_on: 
@@ -36,7 +46,13 @@ services:
     image: fabricioveronez/gerador-documento
     build:
       dockerfile: Dockerfile
-      context: gerador-documento/
+      context: src/gerador-documento/
+    environment:
+      URL_GERADOR_CPF: "gerador-cpf:5000"
+      URL_GERADOR_RG: "gerador-rg:5000"
+      JAEGER_HOST: "jaeger"
+      JAEGER_PORT: "JAEGER_PORT"
+      JAEGER_SERVICE_NAME: "gerador-documento"       
     networks:
       - tracing      
     depends_on: 
@@ -50,9 +66,13 @@ services:
     image: fabricioveronez/gerador-cpf
     build:
       dockerfile: Dockerfile
-      context: gerador-cpf/
+      context: src/gerador-cpf/
     networks:
-      - tracing      
+      - tracing     
+    environment:
+      JAEGER_HOST: "jaeger"
+      JAEGER_PORT: "JAEGER_PORT"
+      JAEGER_SERVICE_NAME: "gerador-cpf"        
     depends_on: 
      - jaeger    
     ports:
@@ -62,7 +82,11 @@ services:
     image: fabricioveronez/gerador-rg
     build:
       dockerfile: Dockerfile
-      context: gerador-rg/
+      context: src/gerador-rg/
+    environment:
+      JAEGER_HOST: "jaeger"
+      JAEGER_PORT: "JAEGER_PORT"
+      JAEGER_SERVICE_NAME: "gerador-rg"        
     networks:
       - tracing      
     depends_on: 

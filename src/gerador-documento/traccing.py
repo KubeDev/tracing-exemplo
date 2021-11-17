@@ -1,6 +1,11 @@
 import logging
 from jaeger_client import Config
 from flask_opentracing import FlaskTracing
+import os
+
+JAEGER_HOST = os.getenv("JAEGER_HOST", "jaeger")
+JAEGER_PORT = os.getenv("JAEGER_PORT", "6831")
+JAEGER_SERVICE_NAME = os.getenv("JAEGER_SERVICE_NAME", "gerador-documento")
 
 def init_tracer(service):
     logging.getLogger('').handlers = []
@@ -13,9 +18,8 @@ def init_tracer(service):
                 'param': 1,
             },
             'local_agent': {
-                'reporting_host': 'jaeger',
-                'reporting_port': '6831'
-                #'reporting_port': '5775'
+                'reporting_host': JAEGER_HOST,
+                'reporting_port': JAEGER_PORT
             },            
             'logging': True,
         },
@@ -24,5 +28,5 @@ def init_tracer(service):
 
     return config.initialize_tracer()
 
-opentracing_tracer = init_tracer("gerador-documento")
+opentracing_tracer = init_tracer(JAEGER_SERVICE_NAME)
 tracing = FlaskTracing(opentracing_tracer)

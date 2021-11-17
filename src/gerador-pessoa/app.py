@@ -4,8 +4,12 @@ from traccing import tracing, opentracing_tracer
 import opentracing
 import requests
 import logging
+import os
 
 app = Flask(__name__, template_folder='templates')
+
+URL_GERADOR_NOME = os.getenv("URL_GERADOR_NOME", "gerador-nome:5000")
+URL_GERADOR_DOCUMENTO = os.getenv("URL_GERADOR_DOCUMENTO", "gerador-documento:5000")
 
 @app.route('/', methods=['GET'])
 @tracing.trace()
@@ -15,10 +19,10 @@ def index():
     
     text_carrier = {}
     opentracing_tracer.inject(span, opentracing.Format.TEXT_MAP, text_carrier)
-    response_nome = requests.get('http://gerador-nome:5000' + '/nomecompleto', headers=text_carrier)
+    response_nome = requests.get('http://' + URL_GERADOR_NOME + '/nomecompleto', headers=text_carrier)
     nome = response_nome.json()
 
-    response_documento = requests.get('http://gerador-documento:5000' + '/documento', headers=text_carrier)
+    response_documento = requests.get('http://' + URL_GERADOR_DOCUMENTO + '/documento', headers=text_carrier)
     documento = response_documento.json()
 
     # Log para incluir o evento no Jaeger

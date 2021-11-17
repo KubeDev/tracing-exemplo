@@ -19,7 +19,7 @@ def gerador_cpf():
 @app.route('/cpf', methods=['GET'])
 @tracing.trace()
 def index():
-    time.sleep(float(random.randrange(0, 200))/100)
+    #time.sleep(float(random.randrange(0, 200))/100)
     return jsonify({'cpf': gerador_cpf()})
 
 if __name__ == '__main__':

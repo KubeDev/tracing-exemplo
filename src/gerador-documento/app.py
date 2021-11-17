@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify
 from flask.wrappers import Response
 from traccing import tracing, opentracing_tracer
@@ -6,6 +7,9 @@ import requests
 import time
 
 app = Flask(__name__)
+
+URL_GERADOR_CPF = os.getenv("URL_GERADOR_CPF", "gerador-cpf:5000")
+URL_GERADOR_RG = os.getenv("URL_GERADOR_RG", "gerador-rg:5000")
 
 @app.route('/documento', methods=['GET'])
 @tracing.trace()
@@ -16,11 +20,11 @@ def index():
     opentracing_tracer.inject(span, opentracing.Format.TEXT_MAP, text_carrier)
 
     span.log_kv({'event': 'Carregando os dados de CPF.'})
-    response_cpf = requests.get('http://gerador-cpf:5000' + '/cpf', headers=text_carrier)
+    response_cpf = requests.get('http://' + URL_GERADOR_CPF + '/cpf', headers=text_carrier)
     cpf = response_cpf.json()
 
     span.log_kv({'event': 'Carregando os dados de RG.'})
-    response_rg = requests.get('http://gerador-rg:5000' + '/rg', headers=text_carrier)
+    response_rg = requests.get('http://' + URL_GERADOR_RG + '/rg', headers=text_carrier)
     rg = response_rg.json()
 
     return jsonify({'cpf': cpf['cpf'], 'rg': rg['rg']})
