@@ -24,7 +24,7 @@ def gerador_rg():
 @app.route('/rg', methods=['GET'])
 @tracing.trace()
 def index():
-    #time.sleep(float(randrange(0, 200))/100)
+    time.sleep(float(randrange(0, 200))/100)
     return jsonify({'rg': gerador_rg()})
 
 if __name__ == '__main__':

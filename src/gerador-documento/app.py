@@ -15,9 +15,11 @@ def index():
     text_carrier = {}
     opentracing_tracer.inject(span, opentracing.Format.TEXT_MAP, text_carrier)
 
+    span.log_kv({'event': 'Carregando os dados de CPF.'})
     response_cpf = requests.get('http://gerador-cpf:5000' + '/cpf', headers=text_carrier)
     cpf = response_cpf.json()
 
+    span.log_kv({'event': 'Carregando os dados de RG.'})
     response_rg = requests.get('http://gerador-rg:5000' + '/rg', headers=text_carrier)
     rg = response_rg.json()
 

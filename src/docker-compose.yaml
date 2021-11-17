@@ -1,4 +1,9 @@
 version: '3'
+
+networks:
+  tracing:
+    driver: bridge
+
 services: 
 
   gerador-pessoa:
@@ -10,6 +15,8 @@ services:
      - jaeger
      - gerador-nome
      - gerador-documento
+    networks:
+      - tracing
     ports:
       - 5000:5000  
 
@@ -18,6 +25,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: gerador-nome/
+    networks:
+      - tracing      
     depends_on: 
      - jaeger  
     ports:
@@ -28,6 +37,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: gerador-documento/
+    networks:
+      - tracing      
     depends_on: 
      - jaeger
      - gerador-cpf
@@ -40,6 +51,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: gerador-cpf/
+    networks:
+      - tracing      
     depends_on: 
      - jaeger    
     ports:
@@ -50,6 +63,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: gerador-rg/
+    networks:
+      - tracing      
     depends_on: 
      - jaeger      
     ports:
@@ -58,6 +73,8 @@ services:
   jaeger: 
     container_name: jeager_tracing
     image: jaegertracing/all-in-one
+    networks:
+      - tracing    
     ports: 
       - "5775:5775/udp"
       - "6831:6831/udp"
