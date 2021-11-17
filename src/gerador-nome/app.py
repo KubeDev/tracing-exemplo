@@ -58,7 +58,7 @@ def index():
     index = random.randint(0, len(sobrenomes))
     sobrenome = sobrenomes[index] 
     nome_completo = nome + ' ' + sobrenome 
-    #time.sleep(float(random.randrange(0, 200))/100)
+    time.sleep(float(random.randrange(0, 200))/100)
     return jsonify({'nomeCompleto': nome_completo})
 
 if __name__ == '__main__':
